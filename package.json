@@ -1,6 +1,6 @@
 {
-  "name": "gpse",
+  "name": "github-stats-card",
   "version": "1.0.0",
-  "description": "GitHub Profile Stats Engine — custom SVG cards for README",
-  "private": true
+  "description": "SVG GitHub stats card API for README badges",
+  "engines": { "node": ">=18" }
 }

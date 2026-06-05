@@ -1,47 +1,62 @@
-# GPSE — GitHub Profile Stats Engine
+# github-stats-card
 
-Custom SVG stats cards for your GitHub README. Dark, monospaced, badge-style. Self-hosted on Vercel.
+A self-hosted SVG stats card API for your GitHub README. Deploy to Vercel in one click.
 
-## Deploy in 3 steps
+## Deploy
 
-### 1. Fork & deploy
-- Fork this repo
-- Go to [vercel.com](https://vercel.com) → New Project → import your fork → Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/github-stats-card)
 
-### 2. Add your GitHub token
-- GitHub → Settings → Developer settings → Personal access tokens (classic)
-- Generate token with scopes: `read:user`, `repo`
-- Vercel → your project → Settings → Environment Variables
-- Add: `PAT_1` = your token
-- Redeploy
+**Steps:**
+1. Fork / clone this repo
+2. Push to GitHub
+3. Import into [Vercel](https://vercel.com) — zero config needed
+4. (Optional) Add a `GITHUB_TOKEN` env var in Vercel settings to avoid rate limits
 
-### 3. Paste into your README
+## Usage
 
-Replace `your-app` with your actual Vercel URL:
+Once deployed, add this to your README:
 
 ```md
-<!-- Stats card -->
-![](https://your-app.vercel.app/api/stats?username=WTRMLNv1)
-
-<!-- Top languages -->
-![](https://your-app.vercel.app/api/langs?username=WTRMLNv1)
-
-<!-- Contribution heatmap (default 18 weeks) -->
-![](https://your-app.vercel.app/api/heatmap?username=WTRMLNv1)
-
-<!-- Heatmap with custom width (6–52 weeks) -->
-![](https://your-app.vercel.app/api/heatmap?username=WTRMLNv1&weeks=26)
+![GitHub Stats](https://YOUR_VERCEL_URL/api/stats?username=YOUR_USERNAME)
 ```
 
-## Endpoints
+Or as an HTML image (better for alignment):
 
-| Endpoint | Params | Description |
-|---|---|---|
-| `/api/stats` | `username` | Repos, followers, commits, PRs, issues |
-| `/api/langs` | `username` | Top languages bar + breakdown |
-| `/api/heatmap` | `username`, `weeks` (6–52) | Contribution heatmap, teal/amber theme |
+```html
+<img src="https://YOUR_VERCEL_URL/api/stats?username=YOUR_USERNAME" alt="GitHub Stats" />
+```
 
-## Notes
-- Cards cache for 1 hour on Vercel's CDN (`s-maxage=3600`)
-- Heatmap uses GitHub Events API — shows ~90 days of real activity
-- No database, no dependencies, pure serverless functions
+### Parameters
+
+| Param      | Description              | Example         |
+|------------|--------------------------|-----------------|
+| `username` | GitHub username (required) | `?username=torvalds` |
+
+## Rate Limits
+
+GitHub's unauthenticated API allows 60 requests/hour per IP. To increase this:
+
+1. Create a GitHub personal access token (classic, read-only `public_repo` scope)
+2. In Vercel project settings → Environment Variables, add:
+   - Key: `GITHUB_TOKEN`
+   - Value: `ghp_xxxxxxxx...`
+
+Responses are cached for 1 hour via `Cache-Control`.
+
+## What's shown
+
+- Profile picture, name, @username, bio
+- Stars (sum across all public repos)
+- Commits this year (from public events feed)
+- PRs opened (from public events feed)
+- Public repo count, followers, following
+- Top repos by stars
+- Top languages by repo count
+
+## Local dev
+
+```bash
+npm i -g vercel
+vercel dev
+# visit http://localhost:3000/api/stats?username=torvalds
+```
